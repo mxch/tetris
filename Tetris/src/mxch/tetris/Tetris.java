@@ -12,22 +12,26 @@ public class Tetris extends JFrame {
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = 1L;
 	private JLabel statusbar;
+	private int width, height;
 
 	public Tetris() {
+		width = 200;
+		height = 400;
 		initUI();
 	}
 
 	private void initUI() {
 
-		statusbar = new JLabel("This is the status bar.");
+		statusbar = new JLabel("Press S to start, P to pause.");
 		add(statusbar, BorderLayout.SOUTH);
-		Board board = new Board();
+		Board board = new Board(this);
 		add(board);
 		board.start();
 
-		setSize(200, 400);
+		setSize(width, height);
 		setTitle("Tetris");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -35,6 +39,14 @@ public class Tetris extends JFrame {
 
 	public JLabel getStatusBar() {
 		return statusbar;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
 	}
 
 	public static void main(String[] args) {
