@@ -7,3 +7,8 @@ IMPLEMENTATION:
 - The rotation system is depended on the specific ordering of blocks.
 - Information on block orderings are contained in piece class description.
 - Rotations based on the SRS system: http://tetris.wikia.com/wiki/Category:Rotation_Systems
+
+
+NOTES:
+- Core game is complete, rotations and movement all work.
+- Just need to implement speedup, pause, restart and play again.
