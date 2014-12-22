@@ -93,7 +93,7 @@ public class Board {
 			int row = b.getIntY();
 			int col = b.getIntX();
 			System.out.println("Adding block at " + row + " " + col);
-			if (blockIsValid(b)) rowLayout[row][col] = b;
+			if (rowColIsValid(row, col)) rowLayout[row][col] = b;
 
 		}
 	}
@@ -107,7 +107,7 @@ public class Board {
 		for (Block b : piece.getBlocks()) {
 			int row = b.getIntY();
 			int col = b.getIntX();
-			if (blockIsValid(b)) rowLayout[row][col] = EmptyBlock.getInstance();
+			if (rowColIsValid(row, col)) rowLayout[row][col] = EmptyBlock.getInstance();
 		}
 	}
 
@@ -140,9 +140,9 @@ public class Board {
 
 	}
 
-	private boolean blockIsValid(Block b) {
-		return b.getIntX() >= -1 && b.getIntX() < width &&
-				b.getIntY() >= 0 && b.getIntY() < height;
+	private boolean rowColIsValid(int row, int col) {
+		return col >= 0 && col < width &&
+				row >= 0 && row < height;
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class Board {
 			break;
 		}
 
-		if (blockIsValid(b)) {
+		if (rowColIsValid(row, col)) {
 			Block o = rowLayout[row][col];
 			if (!piece.getBlocks().contains(o)) {
 				return o.getType() == BlockType.FULL;
@@ -195,7 +195,7 @@ public class Board {
 		case RIGHT_ONE:
 			return b.getIntX() + 1 == width;
 		case LEFT_ONE:
-			return b.getIntX() - 1 == width;
+			return b.getIntX() == 0;
 		case UP_ONE:
 			return b.getIntY() <= 0; // checks if the block is on or above the top edge.
 		default:
