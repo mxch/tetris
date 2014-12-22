@@ -75,4 +75,10 @@ public class EmptyBlock extends Block {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void moveBlock(int xChange, int yChange) {
+		// TODO Auto-generated method stub
+		
+	}
 }

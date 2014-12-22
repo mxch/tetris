@@ -34,6 +34,7 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 	private Piece currPiece;
 	private Board board;
 	private Timer timer = new Timer(400, this);
+	private int score;
 
 	//private final int boardWidth = 10, boardHeight = 20;
 
@@ -46,6 +47,7 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 		this.tetris = tetris;
 		this.board = new Board();
 		this.currPiece = Piece.getRandomPiece();
+		score = 0;
 
 		//KeyListener l = new MyKeyListener();
 		addKeyListener(this);
@@ -54,7 +56,7 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void start() {
-		board.add(currPiece);
+		board.addPiece(currPiece);
 		repaint();
 		timer.start();
 	}
@@ -70,7 +72,9 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 			// check if there are lines to clear.
 			int numLines = board.clearLines();
 			if (numLines != 0) {
-				repaint();
+				score += numLines;
+				updateScore();
+				//repaint();
 			}
 			//System.out.println("Piece in place.");
 			// check if the game is over.
@@ -82,7 +86,7 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 			currPiece = Piece.getRandomPiece();
 			
 			// add new current piece to board
-			board.add(currPiece);
+			board.addPiece(currPiece);
 		} 
 		// else, move the current piece down one line
 		else {
@@ -98,9 +102,11 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 		//System.out.println("Key Pressed.");
 		int keyCode = arg0.getKeyCode();
 		switch(keyCode) {
-		case KeyEvent.VK_UP: 
+		case KeyEvent.VK_UP:
+			board.move(currPiece, Movement.ROTATE_R);
 			break;
 		case KeyEvent.VK_SHIFT:
+			board.move(currPiece, Movement.ROTATE_L);
 			break;
 		case KeyEvent.VK_DOWN: 
 			board.move(currPiece, Movement.DOWN_ONE);
@@ -156,6 +162,11 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 		// color the block
 		g.setColor(b.getColor());
 		g.fillRect(x-2,y-2,w-2,h-2);
+	}
+	
+	private void updateScore() {
+		tetris.getStatusBar().setText("Lines Cleared: " + score);
+		repaint();
 	}
 
 	private boolean isGameOver() {

@@ -7,6 +7,8 @@ import mxch.geometry.block.Block.BlockType;
 import mxch.geometry.block.EmptyBlock;
 import mxch.geometry.block.FullBlock;
 import mxch.geometry.tetromino.Piece;
+import mxch.geometry.tetromino.Piece.Orientation;
+import mxch.geometry.tetromino.Piece.PieceType;
 
 /**
  * This class represents a 2d array of the board.
@@ -87,7 +89,7 @@ public class Board {
 	 * Adds piece to the board. Each of the blocks contained in piece is added.
 	 * @param piece
 	 */
-	public void add(Piece piece) {
+	public void addPiece(Piece piece) {
 		//System.out.println("Adding Piece.");
 		for (Block b : piece.getBlocks()) {
 			int row = b.getIntY();
@@ -103,12 +105,25 @@ public class Board {
 	 * removed.
 	 * @param piece
 	 */
-	public void remove(Piece piece) {
+	public void removePiece(Piece piece) {
 		for (Block b : piece.getBlocks()) {
 			int row = b.getIntY();
 			int col = b.getIntX();
 			if (rowColIsValid(row, col)) rowLayout[row][col] = EmptyBlock.getInstance();
 		}
+	}
+	
+	public void addBlock(Block b) {
+		int row = b.getIntY();
+		int col = b.getIntX();
+		//System.out.println("Adding block at " + row + " " + col);
+		if (rowColIsValid(row, col)) rowLayout[row][col] = b;
+	}
+	
+	public void removeBlock(Block b) {
+		int row = b.getIntY();
+		int col = b.getIntX();
+		if (rowColIsValid(row, col)) rowLayout[row][col] = EmptyBlock.getInstance();
 	}
 
 	/**
@@ -120,21 +135,31 @@ public class Board {
 		if (m == Movement.DOWN_ALL) {
 			m = Movement.DOWN_ONE;
 			while (canMoveOne(piece, m)) {
-				remove(piece);
+				removePiece(piece);
 				piece.moveOne(m);
-				add(piece);
+				addPiece(piece);
 			}
 		}
 		else if (m == Movement.ROTATE_L) {
-
+			removePiece(piece);
+			if (canRotateL(piece)) {
+				piece.rotateL();
+			}
+			addPiece(piece);
 		}
 		else if (m == Movement.ROTATE_R) {
+			removePiece(piece);
+			if (canRotateR(piece)) {
+				System.out.println("Can rotate R.");
+				piece.rotateR();
+			}
+			addPiece(piece);
 
 		} else {
 			if (canMoveOne(piece, m)) {
-				remove(piece);
+				removePiece(piece);
 				piece.moveOne(m);
-				add(piece);
+				addPiece(piece);
 			}
 		}
 
@@ -142,7 +167,7 @@ public class Board {
 
 	private boolean rowColIsValid(int row, int col) {
 		return col >= 0 && col < width &&
-				row >= 0 && row < height;
+				row >= 0 && row < height - 2; // for statusbar offset
 	}
 
 	/**
@@ -228,15 +253,58 @@ public class Board {
 		}
 		return false;
 	}
-
+	
+	private boolean isBlockValid(Piece p, Block b) {
+		int row = b.getIntY();
+		int col = b.getIntX();
+		if (row < 0) {
+			return true;
+		}
+		else if (rowColIsValid(row,col) &&
+				rowLayout[row][col].getType() == BlockType.EMPTY) {
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isPieceValid(Piece piece) {
+		for (Block b : piece.getBlocks()) {
+			if(!isBlockValid(piece, b)) {
+				return false;
+			}
+		}
+		return true;
+	}
 	/**
 	 * Returns true if it is possible to perform a right rotation on piece, 
 	 * false otherwise.
+	 * 
+	 * J Piece:	1
+	 * 			2 3 4
+	 * 
+	 * L Piece: 	4
+	 * 			1 2 3
+	 * 
+	 * I Piece: 1 2 3 4
+	 * 
+	 * Z Piece:	1 2
+	 * 			  3 4
+	 * 
+	 * S Piece:   3 4
+	 * 			1 2
+	 * 
+	 * T Piece:   3
+	 * 			1 2 4
 	 * @param piece
 	 * @return
 	 */
 	public boolean canRotateR(Piece piece) {
-		throw new UnsupportedOperationException();
+		Piece temp = piece.getRotateR();
+		if (isPieceValid(temp)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -246,7 +314,12 @@ public class Board {
 	 * @return
 	 */
 	public boolean canRotateL(Piece piece) {
-		throw new UnsupportedOperationException();
+		Piece temp = piece.getRotateL();
+		if (isPieceValid(temp)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -304,9 +377,9 @@ public class Board {
 				if (top.getType() == BlockType.FULL) {
 					/*TEST*/
 					//System.out.println("Moving top to bottom");
+					removeBlock(top);
 					top.moveDownOne();
-					rowLayout[row+1][col] = top;
-					rowLayout[row][col] = EmptyBlock.getInstance();
+					addBlock(top);
 				}
 			}
 		}

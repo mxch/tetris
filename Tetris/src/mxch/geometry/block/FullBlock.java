@@ -67,4 +67,9 @@ public class FullBlock extends Block {
 	public void moveLeftOne() {
 		this.translate(-dx, 0);
 	}
+
+	@Override
+	public void moveBlock(int xChange, int yChange) {
+		this.translate(xChange * dx, yChange * dy);
+	}
 }

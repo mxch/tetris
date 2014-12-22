@@ -23,7 +23,7 @@ public class Main extends JFrame {
 
 	private void initUI() {
 
-		statusbar = new JLabel("Press S to start, P to pause.");
+		statusbar = new JLabel("Press S to start, P to pause, r to restart.");
 		add(statusbar, BorderLayout.SOUTH);
 		GameEngine board = new GameEngine(this);
 		add(board);

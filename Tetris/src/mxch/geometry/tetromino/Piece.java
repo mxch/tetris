@@ -19,7 +19,7 @@ public abstract class Piece {
 	Piece(PieceType type, Color color) {
 		this.type = type;
 		this.color = color;
-		this.orient = Orientation.UP;
+		this.orient = Orientation.DOWN;
 		blocks = new ArrayList<FullBlock>();
 	}
 
@@ -28,6 +28,7 @@ public abstract class Piece {
 		int type = rand.nextInt(7);
 
 		switch (type) {
+		/*
 		case 0: return new IPiece();
 		case 1: return new OPiece();
 		case 2: return new TPiece();
@@ -35,6 +36,7 @@ public abstract class Piece {
 		case 4: return new ZPiece();
 		case 5: return new JPiece();
 		case 6:	return new LPiece();
+		*/
 		default: return new IPiece(); //return null; // never happens.
 		}
 	}
@@ -82,8 +84,10 @@ public abstract class Piece {
 			break;
 		}
 	}
-
+	
 	public abstract void rotateR();
 	public abstract void rotateL();
+	public abstract Piece getRotateR();
+	public abstract Piece getRotateL();
 
 }
