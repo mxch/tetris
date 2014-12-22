@@ -1,247 +1,266 @@
 package mxch.tetris;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.Random;
 
-import javax.swing.JPanel;
-import javax.swing.Timer;
+import mxch.geometry.block.Block;
+import mxch.geometry.block.Block.BlockType;
+import mxch.geometry.block.EmptyBlock;
+import mxch.geometry.block.FullBlock;
+import mxch.geometry.tetromino.Piece;
 
-import mxch.geometry.Block;
-import mxch.geometry.IPiece;
-import mxch.geometry.JPiece;
-import mxch.geometry.LPiece;
-import mxch.geometry.OPiece;
-import mxch.geometry.SPiece;
-import mxch.geometry.TPiece;
-import mxch.geometry.Tetromino;
-import mxch.geometry.ZPiece;
+/**
+ * This class represents a 2d array of the board.
+ * Blocks are stored by row and column.
+ * @author maxchiang
+ *
+ */
+public class Board {
+	public enum Movement {RIGHT_ONE, LEFT_ONE, UP_ONE, DOWN_ONE, DOWN_ALL, ROTATE_L, ROTATE_R};
+	private static int pxWidth = 200, pxHeight = 400;
+	private static int width = 10, height = 20;
+	private static int dx = pxWidth/width, dy = pxHeight/height;
+	private Block[][] rowLayout;
 
-public class Board extends JPanel implements ActionListener, KeyListener {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private Timer timer = new Timer(400, this);
-	private ArrayList<Block> blocks;
-	private Tetris tetris;
-	private Tetromino currPiece;
-	
-	private ArrayList<ArrayList<Block>> boardLayout;
-	//private final int boardWidth = 10, boardHeight = 20;
-
-	// boolean values
-	// private boolean gamePaused;
-	private boolean gameOver = false;
-
-
-	public Board(Tetris tetris) {
-		this.tetris = tetris;
-		//boardLayout = new int[boardWidth][boardHeight];
-		blocks = new ArrayList<Block>();
-		//gamePaused = false;
-		currPiece = generateNewPiece();
-		
-		//KeyListener l = new MyKeyListener();
-		addKeyListener(this);
-		setFocusable(true);
-		
-	}
-
-	public void start() {
-		timer.start();
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// check if there are lines to clear.
-		
-		
-		// check if current piece is already in place
-		if (isPieceInPlace()) {
-			// check if the game is over.
-			if (isGameOver()) {
-				/* Test */
-				System.out.println("Game is Over, exiting.");
-				gameOver = true;
-				exitGame();
-			} 
-			/* Test */
-			System.out.println("Piece in Place, generating new Piece.");
-			// add the blocks of the current piece to the board
-			if (currPiece != null) {
-				blocks.addAll(0, currPiece.getBlocks()); // append to the front to paint first blocks last.
-				// add blocks to board layout
-				//for (Bloc)
-			}
-			// create new piece
-			currPiece = generateNewPiece();
-		} 
-		// else, move the current piece down one line
-		else {
-			/* Test */
-			System.out.println("Piece not in Place, moving " + currPiece.toString() + " down.");
-			moveDownOne();
-		}
-
-		repaint();
-	}
-	
-	@Override
-	public void keyPressed(KeyEvent arg0) {
-		System.out.println("Key Pressed.");
-		int keyCode = arg0.getKeyCode();
-		switch(keyCode) {
-		case KeyEvent.VK_UP: 
-			break;
-		case KeyEvent.VK_DOWN: 
-			moveDownOne();
-			System.out.println("Moving down.");
-			break;
-		case KeyEvent.VK_LEFT: 
-			moveLeftOne();
-			System.out.println("Moving left.");
-			break;
-		case KeyEvent.VK_RIGHT: 
-			moveRightOne();
-			System.out.println("Moving Right.");
-			break;
-		case KeyEvent.VK_SPACE:
-			moveDownAll();
-			System.out.println("Dropping block.");
-			break;
-		case KeyEvent.VK_P:
-			break;
-		}
-		
-		repaint();
-		
-	}
-
-	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-
-		// paint all blocks.
-		for (Block b : blocks) {
-			paintBlock(g, b);
-		}
-		
-		if (currPiece != null) {
-			// paint current piece.
-			for (Block b : currPiece.getBlocks()) {
-				paintBlock(g, b);
+	public Board() {
+		rowLayout = new Block[height][width];
+		for (int row = 0; row < height; row++) {
+			for(int col = 0; col < width; col++) {
+				rowLayout[row][col] = EmptyBlock.getInstance();
 			}
 		}
 	}
 
-	private void paintBlock(Graphics g, Block b) {
-		int x = (int) b.getX();
-		int y = (int) b.getY();
-		int w = (int) b.getWidth();
-		int h = (int) b.getHeight();
-		
-		// color the border
-		g.setColor(Color.BLACK);
-		g.fillRect(x,y,w,h);
-		
-		// color the block
-		g.setColor(b.getColor());
-		g.fillRect(x-2,y-2,w-2,h-2);
+	/**
+	 * Getter for board dx.
+	 * This is the number of pixels in the width of a block.
+	 * @return
+	 */
+	public static int getDx() {
+		return dx;
 	}
 
 	/**
-	 * This method generates a random Tetromino.
-	 * @return Randomly generated Tetromino
+	 * Getter for board dy.
+	 * This is the number of pixels in the height of a block.
+	 * @return
 	 */
-	private Tetromino generateNewPiece() {
-		Random rand = new Random();
-		int type = rand.nextInt(7);
+	public static int getDy() {
+		return dy;
+	}
 
-		switch (type) {
-		case 0: return new IPiece(tetris);
-		case 1: return new OPiece(tetris);
-		case 2: return new TPiece(tetris);
-		case 3: return new SPiece(tetris);
-		case 4: return new ZPiece(tetris);
-		case 5: return new JPiece(tetris);
-		case 6:	return new LPiece(tetris);
-		default: return new IPiece(tetris); //return null; // never happens.
+	/**
+	 * Getter for board width.
+	 * Default is 10.
+	 * @return
+	 */
+	public static int getWidth() {
+		return width;
+	}
+
+	/**
+	 * Getter for board height.
+	 * Default is 20.
+	 * @return
+	 */
+	public static int getHeight() {
+		return height;
+	}
+
+	/**
+	 * Returns a list of the FullBlocks on the board.
+	 * @return
+	 */
+	public ArrayList<FullBlock> getBlocks() {
+		ArrayList<FullBlock> blocks = new ArrayList<FullBlock>();
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				Block b = rowLayout[row][col];
+				if (b.getType() == BlockType.FULL) {
+					blocks.add((FullBlock)b);
+				}
+			}
+		}
+		return blocks;
+	}
+
+	/**
+	 * Adds piece to the board. Each of the blocks contained in piece is added.
+	 * @param piece
+	 */
+	public void add(Piece piece) {
+		System.out.println("Adding Piece.");
+		for (Block b : piece.getBlocks()) {
+			int row = b.getIntY();
+			int col = b.getIntX();
+			System.out.println("Adding block at " + row + " " + col);
+			if (blockIsValid(b)) rowLayout[row][col] = b;
+
 		}
 	}
 
-	private boolean isPieceInPlace() {
-		// check if any of the blocks of the current piece
-		// are resting on a block on the board.
-		if (currPiece.onTop(blocks) || currPiece.onBoardBottom()) {
-			return true;
+	/**
+	 * Removes piece from board. Each of the blocks contained in piece is 
+	 * removed.
+	 * @param piece
+	 */
+	public void remove(Piece piece) {
+		for (Block b : piece.getBlocks()) {
+			int row = b.getIntY();
+			int col = b.getIntX();
+			if (blockIsValid(b)) rowLayout[row][col] = EmptyBlock.getInstance();
+		}
+	}
+
+	/**
+	 * Attempts to move piece by the Movement specified by m.
+	 * @param piece
+	 * @param m
+	 */
+	public void move(Piece piece, Movement m) {
+		if (m == Movement.DOWN_ALL) {
+			m = Movement.DOWN_ONE;
+			while (canMoveOne(piece, m)) {
+				remove(piece);
+				piece.moveOne(m);
+				add(piece);
+			}
+		}
+		else if (m == Movement.ROTATE_L) {
+
+		}
+		else if (m == Movement.ROTATE_R) {
+
+		} else {
+			if (canMoveOne(piece, m)) {
+				remove(piece);
+				piece.moveOne(m);
+				add(piece);
+			}
 		}
 
+	}
+
+	private boolean blockIsValid(Block b) {
+		return b.getIntX() >= -1 && b.getIntX() < width &&
+				b.getIntY() >= 0 && b.getIntY() < height;
+	}
+
+	/**
+	 * Checks to see if block b is adjacent to a block within the board
+	 * that is not part of the same piece as b.
+	 * @param piece The piece b is a part of.
+	 * @param b The block to check.
+	 * @param m The direction of movement to check.
+	 * @return True if b is adjacent to a block x in the movement direction m
+	 * and x is not a part of piece. False otherwise.
+	 */
+	private boolean blockOnBlock(Piece piece, Block b, Movement m) {
+		int row = 0, col = 0;
+		switch (m) {
+		case RIGHT_ONE:
+			row = b.getIntY();
+			col = b.getIntX() + 1;
+			break;
+		case LEFT_ONE:
+			row = b.getIntY();
+			col = b.getIntX() - 1;
+			break;
+		case DOWN_ONE:
+			row = b.getIntY() + 1;
+			col = b.getIntX();
+			break;
+		}
+
+		if (blockIsValid(b)) {
+			Block o = rowLayout[row][col];
+			if (!piece.getBlocks().contains(o)) {
+				return o.getType() == BlockType.FULL;
+			}
+		}
 		return false;
 	}
 
-	private boolean isGameOver() {
-		// check if the piece is in place
-		// and if any of the current piece is above the board
-		if (currPiece != null && currPiece.aboveBoard()) {
-			return true;
+	/**
+	 * Checks to see if the block b is adjacent to the top, bottom, right or
+	 * leftmost edge of the board.
+	 * @param b The block to check.
+	 * @param m The direction of movement to check.
+	 * @return True if b is adjacent to an edge in the movement direction m.
+	 * False otherwise.
+	 */
+	private boolean blockOnEdge(Block b, Movement m) {
+		switch (m) {
+		case DOWN_ONE:
+			return b.getIntY() + 1 + 2 == height; // + 2 for statusbar offset...
+		case RIGHT_ONE:
+			return b.getIntX() + 1 == width;
+		case LEFT_ONE:
+			return b.getIntX() - 1 == width;
+		case UP_ONE:
+			return b.getIntY() <= 0; // checks if the block is on or above the top edge.
+		default:
+			return false;
+		}
+	}
+
+	/**
+	 * Returns true if piece is in place, meaning for each block b of piece,
+	 * b is on the bottom of the board or on another block, false otherwise.
+	 * @param piece
+	 * @return
+	 */
+	public boolean isPieceInPlace(Piece piece) {
+		for (Block b : piece.getBlocks()) {
+			if (blockOnEdge(b, Movement.DOWN_ONE) || 
+					blockOnBlock(piece, b, Movement.DOWN_ONE)) {
+				return true;
+			}
 		}
 		return false;
-
-	}
-	
-	private void rotateRight() {
-		if (currPiece.canRotateR(blocks)) currPiece.rotateR();
-	}
-	
-	private void rotateL() {
-		if (!isPieceInPlace() && currPiece.canRotateL(blocks)) currPiece.rotateL();
-	}
-	
-	private void moveDownAll() {
-		while(!isPieceInPlace() && currPiece.canMoveDownOne(blocks)) currPiece.moveDownOne();
 	}
 
-	private void moveDownOne() {
-		if (!isPieceInPlace() && currPiece.canMoveDownOne(blocks)) currPiece.moveDownOne();
-	}
 	
-	private void moveLeftOne() {
-		if (currPiece.canMoveLeftOne(blocks)) currPiece.moveLeftOne();
-	}
-	
-	private void moveRightOne() {
-		if (currPiece.canMoveRightOne(blocks)) currPiece.moveRightOne();
-	}
-	
-	private void exitGame() {
-		System.out.println("Game over.");
-		System.exit(0);
+	public boolean isPieceOnTopEdge(Piece piece) {
+		for (Block b : piece.getBlocks()) {
+			if (blockOnEdge(b, Movement.UP_ONE)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
-	/*
-	private boolean isEmpty() {
-		return blocks.size() == 0;
+	/**
+	 * Returns true if it is possible to perform a right rotation on piece, 
+	 * false otherwise.
+	 * @param piece
+	 * @return
+	 */
+	public boolean canRotateR(Piece piece) {
+		throw new UnsupportedOperationException();
 	}
-	*/
 
+	/**
+	 * Returns true if it is possible to perform a left rotation on piece, 
+	 * false otherwise.
+	 * @param piece
+	 * @return
+	 */
+	public boolean canRotateL(Piece piece) {
+		throw new UnsupportedOperationException();
+	}
 
+	/**
+	 * Returns true if it is possible to move piece down one, false otherwise.
+	 * @param piece
+	 * @return
+	 */
+	public boolean canMoveOne(Piece piece, Movement m) {
+		for (FullBlock b : piece.getBlocks()) {
+			// check if block is on bottom or on another block
+			if (blockOnEdge(b, m) || blockOnBlock(piece, b, m)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

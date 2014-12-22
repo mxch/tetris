@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 
-public class Tetris extends JFrame {
+public class Main extends JFrame {
 
 	/**
 	 * 
@@ -17,7 +17,7 @@ public class Tetris extends JFrame {
 	private JLabel statusbar;
 	private int width = 200, height = 400;
 
-	public Tetris() {
+	public Main() {
 		initUI();
 	}
 
@@ -25,7 +25,7 @@ public class Tetris extends JFrame {
 
 		statusbar = new JLabel("Press S to start, P to pause.");
 		add(statusbar, BorderLayout.SOUTH);
-		Board board = new Board(this);
+		GameEngine board = new GameEngine(this);
 		add(board);
 		board.start();
 
@@ -51,7 +51,7 @@ public class Tetris extends JFrame {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				Tetris game = new Tetris();
+				Main game = new Main();
 				game.setVisible(true);
 			}
 		});
