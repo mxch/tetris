@@ -1,1 +1,9 @@
 TETRIS
+
+
+IMPLEMENTATION:
+Tetrominos are I, J, L, O, P, S, T pieces.
+Each piece is composed of blocks and contains a list of blocks.
+The rotation system is depended on the specific ordering of blocks.
+	- Information on block orderings are contained in piece class description.
+Rotations based on the SRS system: http://tetris.wikia.com/wiki/Category:Rotation_Systems

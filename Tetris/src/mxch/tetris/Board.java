@@ -143,6 +143,8 @@ public class Board {
 		else if (m == Movement.ROTATE_L) {
 			removePiece(piece);
 			if (canRotateL(piece)) {
+				/*TEST*/
+				System.out.println("Can rotate L.");
 				piece.rotateL();
 			}
 			addPiece(piece);
@@ -150,6 +152,7 @@ public class Board {
 		else if (m == Movement.ROTATE_R) {
 			removePiece(piece);
 			if (canRotateR(piece)) {
+				/*TEST*/
 				System.out.println("Can rotate R.");
 				piece.rotateR();
 			}

@@ -28,7 +28,7 @@ public abstract class Piece {
 		int type = rand.nextInt(7);
 
 		switch (type) {
-		/*
+		
 		case 0: return new IPiece();
 		case 1: return new OPiece();
 		case 2: return new TPiece();
@@ -36,8 +36,8 @@ public abstract class Piece {
 		case 4: return new ZPiece();
 		case 5: return new JPiece();
 		case 6:	return new LPiece();
-		*/
-		default: return new IPiece(); //return null; // never happens.
+		
+		default: return null; // never happens.
 		}
 	}
 

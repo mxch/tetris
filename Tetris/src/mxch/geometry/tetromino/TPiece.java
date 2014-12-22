@@ -21,62 +21,120 @@ public class TPiece extends Piece {
 		super.addBlock(new FullBlock(5, -1, Board.getDx(), Board.getDy(), color));
 	}
 	
-	public IPiece(IPiece p, int dx1, int dy1, int dx2, int dy2, int dx3, int dy3, int dx4, int dy4) {
-		super(PieceType.I, color);
+	public TPiece(TPiece p) {
+		super(PieceType.T, color);
+		super.setOrientation(p.getOrientation());
 		FullBlock b1 = p.getBlocks().get(0);
 		FullBlock b2 = p.getBlocks().get(1);
 		FullBlock b3 = p.getBlocks().get(2);
 		FullBlock b4 = p.getBlocks().get(3);
-		super.addBlock(new FullBlock(b1.getIntX() + dx1, b1.getIntY() + dy1, Board.getDx(), Board.getDy(), color));
-		super.addBlock(new FullBlock(b2.getIntX() + dx2, b2.getIntY() + dy2, Board.getDx(), Board.getDy(), color));
-		super.addBlock(new FullBlock(b3.getIntX() + dx3, b3.getIntY() + dy3, Board.getDx(), Board.getDy(), color));
-		super.addBlock(new FullBlock(b4.getIntX() + dx4, b4.getIntY() + dy4, Board.getDx(), Board.getDy(), color));
+		super.addBlock(new FullBlock(b1.getIntX(), b1.getIntY(), Board.getDx(), Board.getDy(), color));
+		super.addBlock(new FullBlock(b2.getIntX(), b2.getIntY(), Board.getDx(), Board.getDy(), color));
+		super.addBlock(new FullBlock(b3.getIntX(), b3.getIntY(), Board.getDx(), Board.getDy(), color));
+		super.addBlock(new FullBlock(b4.getIntX(), b4.getIntY(), Board.getDx(), Board.getDy(), color));
 	}
 
 	@Override
 	public void rotateR() {
-		// TODO Auto-generated method stub
-
+		Orientation o = this.getOrientation();
+		switch (o) {
+		case UP:
+			/*TEST*/
+			System.out.println("Rotating UP to RIGHT");
+			getBlocks().get(0).moveBlock(-1, 1);
+			getBlocks().get(1).moveBlock(0, 0);
+			getBlocks().get(2).moveBlock(-1, -1);
+			getBlocks().get(3).moveBlock(1, -1);
+			this.setOrientation(Orientation.RIGHT);
+			break;
+		case DOWN:
+			/*TEST*/
+			System.out.println("Rotating DOWN to LEFT");
+			getBlocks().get(0).moveBlock(1, -1);
+			getBlocks().get(1).moveBlock(0, 0);
+			getBlocks().get(2).moveBlock(1, 1);
+			getBlocks().get(3).moveBlock(-1, 1);
+			this.setOrientation(Orientation.LEFT);
+			break;
+		case LEFT:
+			/*TEST*/
+			System.out.println("Rotating LEFT to UP");
+			getBlocks().get(0).moveBlock(1, 1);
+			getBlocks().get(1).moveBlock(0, 0);
+			getBlocks().get(2).moveBlock(-1, 1);
+			getBlocks().get(3).moveBlock(-1, -1);
+			this.setOrientation(Orientation.UP);
+			break;
+		case RIGHT:
+			/*TEST*/
+			System.out.println("Rotating RIGHT to DOWN");
+			getBlocks().get(0).moveBlock(-1, -1);
+			getBlocks().get(1).moveBlock(0, 0);
+			getBlocks().get(2).moveBlock(1, -1);
+			getBlocks().get(3).moveBlock(1, 1);
+			this.setOrientation(Orientation.DOWN);
+			break;
+		}
 	}
-
+	
 	@Override
 	public void rotateL() {
-		// TODO Auto-generated method stub
-
+		Orientation o = this.getOrientation();
+		switch (o) {
+		case UP:
+			/*TEST*/
+			System.out.println("Rotating UP to LEFT");
+			getBlocks().get(0).moveBlock(-1, -1);
+			getBlocks().get(1).moveBlock(0, 0);
+			getBlocks().get(2).moveBlock(1, -1);
+			getBlocks().get(3).moveBlock(1, 1);
+			this.setOrientation(Orientation.LEFT);
+			break;
+		case DOWN:
+			/*TEST*/
+			System.out.println("Rotating DOWN to RIGHT");
+			getBlocks().get(0).moveBlock(1, 1);
+			getBlocks().get(1).moveBlock(0, 0);
+			getBlocks().get(2).moveBlock(-1, 1);
+			getBlocks().get(3).moveBlock(-1, -1	);
+			this.setOrientation(Orientation.RIGHT);
+			break;
+		case LEFT:
+			/*TEST*/
+			System.out.println("Rotating LEFT to DOWN");
+			getBlocks().get(0).moveBlock(-1, 1);
+			getBlocks().get(1).moveBlock(0, 0);
+			getBlocks().get(2).moveBlock(-1, -1);
+			getBlocks().get(3).moveBlock(1, -1);
+			this.setOrientation(Orientation.DOWN);
+			break;
+		case RIGHT:
+			/*TEST*/
+			System.out.println("Rotating RIGHT to UP");
+			getBlocks().get(0).moveBlock(1, -1);
+			getBlocks().get(1).moveBlock(0, 0);
+			getBlocks().get(2).moveBlock(1, 1);
+			getBlocks().get(3).moveBlock(-1, 1);
+			this.setOrientation(Orientation.UP);
+			break;
+		}
 	}
 	
 	@Override
 	public Piece getRotateR() {
-		int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0, dx3 = 0, dy3 = 0, dx4 = 0, dy4 = 0;
-		Orientation o = this.getOrientation();
-		switch (o) {
-		case UP:
-			break;
-		case DOWN:
-			break;
-		case LEFT:
-			break;
-		case RIGHT:
-			break;
-		}
-		return new IPiece(this, dx1, dy1, dx2, dy2, dx3, dy3, dx4, dy4);
+		TPiece temp = new TPiece(this);
+		/*TEST*/
+		System.out.println("TEMP: ");
+		temp.rotateR();
+		return temp;
 	}
 
 	@Override
 	public Piece getRotateL() {
-		int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0, dx3 = 0, dy3 = 0, dx4 = 0, dy4 = 0;
-		Orientation o = this.getOrientation();
-		switch (o) {
-		case UP:
-			break;
-		case DOWN:
-			break;
-		case LEFT:
-			break;
-		case RIGHT:
-			break;
-		}
-		return new IPiece(this, dx1, dy1, dx2, dy2, dx3, dy3, dx4, dy4);
+		TPiece temp = new TPiece(this);
+		/*TEST*/
+		System.out.println("TEMP: ");
+		temp.rotateL();
+		return temp;
 	}
-
 }

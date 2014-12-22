@@ -88,6 +88,8 @@ public class IPiece extends Piece {
 		Orientation o = this.getOrientation();
 		switch (o) {
 		case UP:
+			/*TEST*/
+			System.out.println("Rotating UP to LEFT");
 			getBlocks().get(0).moveBlock(-2, -1);
 			getBlocks().get(1).moveBlock(-1, 0);
 			getBlocks().get(2).moveBlock(0, 1);
@@ -95,6 +97,8 @@ public class IPiece extends Piece {
 			this.setOrientation(Orientation.LEFT);
 			break;
 		case DOWN:
+			/*TEST*/
+			System.out.println("Rotating DOWN to RIGHT");
 			getBlocks().get(0).moveBlock(2, 1);
 			getBlocks().get(1).moveBlock(1, 0);
 			getBlocks().get(2).moveBlock(0, -1);
@@ -102,13 +106,17 @@ public class IPiece extends Piece {
 			this.setOrientation(Orientation.RIGHT);
 			break;
 		case LEFT:
+			/*TEST*/
+			System.out.println("Rotating LEFT to DOWN");
 			getBlocks().get(0).moveBlock(-1, 2);
 			getBlocks().get(1).moveBlock(0, 1);
 			getBlocks().get(2).moveBlock(1, 0);
-			getBlocks().get(3).moveBlock(-1, 2);
+			getBlocks().get(3).moveBlock(2, -1);
 			this.setOrientation(Orientation.DOWN);
 			break;
 		case RIGHT:
+			/*TEST*/
+			System.out.println("Rotating RIGHT to UP");
 			getBlocks().get(0).moveBlock(1, -2);
 			getBlocks().get(1).moveBlock(0, -1);
 			getBlocks().get(2).moveBlock(-1, 0);
