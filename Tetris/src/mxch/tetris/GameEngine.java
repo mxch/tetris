@@ -24,6 +24,11 @@ import mxch.geometry.tetromino.Piece;
 import mxch.geometry.tetromino.ZPiece;
 import mxch.tetris.Board.Movement;
 
+/**
+ * The GameEngine handles game flow and paints the board onto the screen.
+ * @author maxchiang
+ *
+ */
 public class GameEngine extends JPanel implements ActionListener, KeyListener {
 
 	/**
@@ -35,12 +40,6 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 	private Board board;
 	private Timer timer = new Timer(400, this);
 	private int score;
-
-	//private final int boardWidth = 10, boardHeight = 20;
-
-	// boolean values
-	// private boolean gamePaused;
-	private boolean gameOver = false;
 
 
 	public GameEngine(Main tetris) {
@@ -74,23 +73,17 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 			if (numLines != 0) {
 				score += numLines;
 				updateScore();
-				//repaint();
 			}
-			//System.out.println("Piece in place.");
 			// check if the game is over.
 			if (isGameOver()) {
 				exitGame();
 			}
-			
-			// create new current piece
-			currPiece = Piece.getRandomPiece();
-			
-			// add new current piece to board
-			board.addPiece(currPiece);
+			currPiece = Piece.getRandomPiece(); // create new current piece
+			board.addPiece(currPiece); // add new current piece to board
+
 		} 
 		// else, move the current piece down one line
 		else {
-			//System.out.println("Moving piece down.");
 			board.move(currPiece, Movement.DOWN_ONE);
 		}
 
@@ -99,7 +92,6 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		//System.out.println("Key Pressed.");
 		int keyCode = arg0.getKeyCode();
 		switch(keyCode) {
 		case KeyEvent.VK_UP:
@@ -136,20 +128,16 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void paint(Graphics g) {
-		//System.out.println("Painting board.");
 		super.paint(g);
 
 		// paint all blocks.
-		//System.out.println("Getting blocks.");
 		ArrayList<FullBlock> blocks = board.getBlocks();
-		//System.out.println("Num of blocks: " + blocks.size());
 		for (FullBlock b : blocks) {
 			paintBlock(g, b);
 		}
 	}
 
 	private void paintBlock(Graphics g, FullBlock b) {
-		//System.out.println("Painting block.");
 		int x = (int) b.getX();
 		int y = (int) b.getY();
 		int w = (int) b.getWidth();
