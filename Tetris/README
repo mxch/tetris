@@ -1,5 +1,14 @@
 TETRIS
 
+CONTROLS:
+- S to start/resume.
+- P to pause the game.
+- R to restart the game.
+- E to exit.
+- Left and Right arrow to position the piece.
+- Up arrow to rotate the piece right.
+- Shift to rotate the piece left.
+- Space to drop the piece.
 
 IMPLEMENTATION:
 - Tetrominos are I, J, L, O, P, S, T pieces.
@@ -7,6 +16,7 @@ IMPLEMENTATION:
 - The rotation system is depended on the specific ordering of blocks.
 - Information on block orderings are contained in piece class description.
 - Rotations based on the SRS system: http://tetris.wikia.com/wiki/Category:Rotation_Systems
+- Scoring is based on the original Nintendo scoring system: http://tetris.wikia.com/wiki/Scoring
 
 
 NOTES:

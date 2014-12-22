@@ -81,4 +81,10 @@ public class EmptyBlock extends Block {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void setColor(Color c) {
+		// TODO Auto-generated method stub
+		
+	}
 }

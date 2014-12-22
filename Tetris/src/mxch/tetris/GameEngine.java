@@ -18,6 +18,7 @@ import mxch.geometry.tetromino.IPiece;
 import mxch.geometry.tetromino.JPiece;
 import mxch.geometry.tetromino.LPiece;
 import mxch.geometry.tetromino.OPiece;
+import mxch.geometry.tetromino.Piece.PieceType;
 import mxch.geometry.tetromino.SPiece;
 import mxch.geometry.tetromino.TPiece;
 import mxch.geometry.tetromino.Piece;
@@ -37,30 +38,55 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 	private static final long serialVersionUID = 1L;
 	private Main tetris;
 	private Piece currPiece;
+	private Piece ghostPiece;
 	private Board board;
-	private Timer timer = new Timer(400, this);
+	private int startingTimer = 1000;
+	private int currentTimer;
+	private Timer timer;
+	private int timerOffset = 200;
+	private int level;
+	private int linesCleared;
 	private int score;
+
+	private boolean gamePaused = true;
+	private boolean gameOver = false;
 
 
 	public GameEngine(Main tetris) {
 		this.tetris = tetris;
-		this.board = new Board();
-		this.currPiece = Piece.getRandomPiece();
-		score = 0;
-
-		//KeyListener l = new MyKeyListener();
 		addKeyListener(this);
 		setFocusable(true);
 
 	}
 
 	public void start() {
+		this.timer = new Timer(startingTimer, this);
+		this.currentTimer = startingTimer;
+		this.board = new Board();
+		this.currPiece = Piece.getRandomPiece();
+		level = 0;
+		linesCleared = 0;
+		score = 0;
 		board.addPiece(currPiece);
-		repaint();
+	}
+
+	private void restart() {
+		pause();
+		this.timer = new Timer(startingTimer, this);
+		this.currentTimer = startingTimer;
+		this.board = new Board();
+		this.currPiece = Piece.getRandomPiece();
+		score = 0;
+		gameOver = false;
+	}
+
+	private void resume() {
+		gamePaused = false;
 		timer.start();
 	}
 
-	public void pause() {
+	private void pause() {
+		gamePaused = true;
 		timer.stop();
 	}
 
@@ -71,12 +97,18 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 			// check if there are lines to clear.
 			int numLines = board.clearLines();
 			if (numLines != 0) {
-				score += numLines;
-				updateScore();
+				linesCleared += numLines;
+				updateScore(numLines);
+				// check for level up.
+				if (linesCleared % 10 == 0) { // level up every 10 lines cleared
+					/*TEST*/
+					//System.out.println("LEVEL UP");
+					levelUp();
+				}
 			}
 			// check if the game is over.
 			if (isGameOver()) {
-				exitGame();
+				gameOver();
 			}
 			currPiece = Piece.getRandomPiece(); // create new current piece
 			board.addPiece(currPiece); // add new current piece to board
@@ -84,6 +116,7 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 		} 
 		// else, move the current piece down one line
 		else {
+			//displayGhostPiece();
 			board.move(currPiece, Movement.DOWN_ONE);
 		}
 
@@ -95,40 +128,67 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 		int keyCode = arg0.getKeyCode();
 		switch(keyCode) {
 		case KeyEvent.VK_UP:
-			board.move(currPiece, Movement.ROTATE_R);
+			if (!gamePaused && !gameOver) {
+				board.move(currPiece, Movement.ROTATE_R);
+			}
 			break;
 		case KeyEvent.VK_SHIFT:
-			board.move(currPiece, Movement.ROTATE_L);
+			if (!gamePaused && !gameOver) {
+				board.move(currPiece, Movement.ROTATE_L);
+			}
 			break;
 		case KeyEvent.VK_DOWN: 
-			board.move(currPiece, Movement.DOWN_ONE);
+			if (!gamePaused && !gameOver) {
+				board.move(currPiece, Movement.DOWN_ONE);
+			}
 			break;
 		case KeyEvent.VK_LEFT: 
-			board.move(currPiece, Movement.LEFT_ONE);
+			if (!gamePaused && !gameOver) {
+				board.move(currPiece, Movement.LEFT_ONE);
+			}
 			break;
 		case KeyEvent.VK_RIGHT: 
-			board.move(currPiece, Movement.RIGHT_ONE);
+			if (!gamePaused && !gameOver) {
+				board.move(currPiece, Movement.RIGHT_ONE);
+			}
 			break;
 		case KeyEvent.VK_SPACE:
-			board.move(currPiece, Movement.DOWN_ALL);
-			// need to run actionPerformed to prevent dropped piece from moving
-			actionPerformed(new ActionEvent(this, 0, null)); 
+			if (!gamePaused && !gameOver) {
+				board.move(currPiece, Movement.DOWN_ALL);
+				// need to run actionPerformed to prevent dropped piece from moving
+				actionPerformed(new ActionEvent(this, 0, null)); 
+			}
 			break;
 		case KeyEvent.VK_P:
+			pause();
 			break;
+		case KeyEvent.VK_S:
+			resume();
+			break;
+		case KeyEvent.VK_R:
+			restart();
+			break;
+		case KeyEvent.VK_E:
+			exitGame();
 		}
 		repaint();
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {}
-	
+
 	@Override
 	public void keyTyped(KeyEvent arg0) {}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
+
+		/*
+		// paint background
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, tetris.getWidth(), tetris.getHeight());
+		 */
 
 		// paint all blocks.
 		ArrayList<FullBlock> blocks = board.getBlocks();
@@ -151,19 +211,58 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 		g.setColor(b.getColor());
 		g.fillRect(x-2,y-2,w-2,h-2);
 	}
-	
-	private void updateScore() {
-		tetris.getStatusBar().setText("Lines Cleared: " + score);
+
+	private void levelUp() {
+		level++;
+		if (currentTimer > 0) {
+			timer = new Timer(currentTimer - timerOffset * level, this);
+		}
+		timer.start();
+	}
+
+	/**
+	 * Scoring based on the original Nintendo Scoring system.
+	 * http://tetris.wikia.com/wiki/Scoring
+	 * @param numLines
+	 */
+	private void updateScore(int numLines) {
+		switch (numLines) {
+		case 1:
+			score += 40*(level+1);
+			break;
+		case 2:
+			score += 100*(level+1);
+			break;
+		case 3:
+			score += 300*(level+1);
+			break;
+		case 4:
+			score += 1200*(level+1);
+			break;
+		}
+		tetris.getStatusBar().setText("Score: " + score);
 		repaint();
 	}
+	
+	/*
+	private void displayGhostPiece() {
+		ghostPiece = currPiece.getGhostPiece();
+		board.updateGhostPiece(ghostPiece);
+	}
+	*/
 
 	private boolean isGameOver() {
 		return board.isPieceInPlace(currPiece) && board.isPieceOnTopEdge(currPiece);
+	}
 
+	private void gameOver() {
+		tetris.getStatusBar().setText("GAME OVER. Lines Cleared: " + 
+				linesCleared +" Score: " + score);
+		gameOver = true;
+		pause();
 	}
 
 	private void exitGame() {
-		System.out.println("Game over.");
 		System.exit(0);
 	}
 }

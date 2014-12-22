@@ -72,4 +72,9 @@ public class FullBlock extends Block {
 	public void moveBlock(int xChange, int yChange) {
 		this.translate(xChange * dx, yChange * dy);
 	}
+
+	@Override
+	public void setColor(Color c) {
+		this.color = c;
+	}
 }

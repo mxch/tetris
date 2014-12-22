@@ -40,7 +40,7 @@ public class SPiece extends Piece {
 		switch (o) {
 		case UP:
 			/*TEST*/
-			System.out.println("Rotating UP to RIGHT");
+			//System.out.println("Rotating UP to RIGHT");
 			getBlocks().get(0).moveBlock(0, 2);
 			getBlocks().get(1).moveBlock(1, 1);
 			getBlocks().get(2).moveBlock(0, 0);
@@ -49,7 +49,7 @@ public class SPiece extends Piece {
 			break;
 		case DOWN:
 			/*TEST*/
-			System.out.println("Rotating DOWN to LEFT");
+			//System.out.println("Rotating DOWN to LEFT");
 			getBlocks().get(0).moveBlock(0, -2);
 			getBlocks().get(1).moveBlock(-1, -1);
 			getBlocks().get(2).moveBlock(0, 0);
@@ -58,7 +58,7 @@ public class SPiece extends Piece {
 			break;
 		case LEFT:
 			/*TEST*/
-			System.out.println("Rotating LEFT to UP");
+			//System.out.println("Rotating LEFT to UP");
 			getBlocks().get(0).moveBlock(2, 0);
 			getBlocks().get(1).moveBlock(1, -1);
 			getBlocks().get(2).moveBlock(0, 0);
@@ -67,7 +67,7 @@ public class SPiece extends Piece {
 			break;
 		case RIGHT:
 			/*TEST*/
-			System.out.println("Rotating RIGHT to DOWN");
+			//System.out.println("Rotating RIGHT to DOWN");
 			getBlocks().get(0).moveBlock(-2, 0);
 			getBlocks().get(1).moveBlock(-1, 1);
 			getBlocks().get(2).moveBlock(0, 0);
@@ -83,7 +83,7 @@ public class SPiece extends Piece {
 		switch (o) {
 		case UP:
 			/*TEST*/
-			System.out.println("Rotating UP to LEFT");
+			//System.out.println("Rotating UP to LEFT");
 			getBlocks().get(0).moveBlock(-2, 0);
 			getBlocks().get(1).moveBlock(-1, 1);
 			getBlocks().get(2).moveBlock(0, 0);
@@ -92,7 +92,7 @@ public class SPiece extends Piece {
 			break;
 		case DOWN:
 			/*TEST*/
-			System.out.println("Rotating DOWN to RIGHT");
+			//System.out.println("Rotating DOWN to RIGHT");
 			getBlocks().get(0).moveBlock(2, 0);
 			getBlocks().get(1).moveBlock(1, -1);
 			getBlocks().get(2).moveBlock(0, 0);
@@ -101,7 +101,7 @@ public class SPiece extends Piece {
 			break;
 		case LEFT:
 			/*TEST*/
-			System.out.println("Rotating LEFT to DOWN");
+			//System.out.println("Rotating LEFT to DOWN");
 			getBlocks().get(0).moveBlock(0, 2);
 			getBlocks().get(1).moveBlock(1, 1);
 			getBlocks().get(2).moveBlock(0, 0);
@@ -110,7 +110,7 @@ public class SPiece extends Piece {
 			break;
 		case RIGHT:
 			/*TEST*/
-			System.out.println("Rotating RIGHT to UP");
+			//System.out.println("Rotating RIGHT to UP");
 			getBlocks().get(0).moveBlock(0, -2);
 			getBlocks().get(1).moveBlock(-1, -1);
 			getBlocks().get(2).moveBlock(0, 0);
@@ -124,7 +124,7 @@ public class SPiece extends Piece {
 	public Piece getRotateR() {
 		SPiece temp = new SPiece(this);
 		/*TEST*/
-		System.out.println("TEMP: ");
+		//System.out.println("TEMP: ");
 		temp.rotateR();
 		return temp;
 	}
@@ -133,8 +133,15 @@ public class SPiece extends Piece {
 	public Piece getRotateL() {
 		SPiece temp = new SPiece(this);
 		/*TEST*/
-		System.out.println("TEMP: ");
+		//System.out.println("TEMP: ");
 		temp.rotateL();
+		return temp;
+	}
+	
+	@Override
+	public Piece getGhostPiece() {
+		Piece temp = new SPiece(this);
+		temp.setColor(Color.white);
 		return temp;
 	}
 

@@ -1,5 +1,6 @@
 package mxch.tetris;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import mxch.geometry.block.Block;
@@ -22,6 +23,7 @@ public class Board {
 	private static int width = 10, height = 20;
 	private static int dx = pxWidth/width, dy = pxHeight/height;
 	private Block[][] rowLayout;
+	private Piece ghostPiece;
 
 	public Board() {
 		rowLayout = new Block[height][width];
@@ -144,7 +146,7 @@ public class Board {
 			removePiece(piece);
 			if (canRotateL(piece)) {
 				/*TEST*/
-				System.out.println("Can rotate L.");
+				//System.out.println("Can rotate L.");
 				piece.rotateL();
 			}
 			addPiece(piece);
@@ -153,7 +155,7 @@ public class Board {
 			removePiece(piece);
 			if (canRotateR(piece)) {
 				/*TEST*/
-				System.out.println("Can rotate R.");
+				//System.out.println("Can rotate R.");
 				piece.rotateR();
 			}
 			addPiece(piece);
@@ -170,7 +172,7 @@ public class Board {
 
 	private boolean rowColIsValid(int row, int col) {
 		return col >= 0 && col < width &&
-				row >= 0 && row < height - 2; // for statusbar offset
+				row >= 0 && row < height; //- 2; // for statusbar offset
 	}
 
 	/**
@@ -219,7 +221,7 @@ public class Board {
 	private boolean blockOnEdge(Block b, Movement m) {
 		switch (m) {
 		case DOWN_ONE:
-			return b.getIntY() + 1 + 2 == height; // + 2 for statusbar offset...
+			return b.getIntY() + 1 == height; //+ 2 == height; // + 2 for statusbar offset...
 		case RIGHT_ONE:
 			return b.getIntX() + 1 == width;
 		case LEFT_ONE:
@@ -331,6 +333,7 @@ public class Board {
 	 * @return
 	 */
 	public boolean canMoveOne(Piece piece, Movement m) {
+			
 		for (FullBlock b : piece.getBlocks()) {
 			// check if block is on bottom or on another block
 			if (blockOnEdge(b, m) || blockOnBlock(piece, b, m)) {
@@ -387,4 +390,11 @@ public class Board {
 			}
 		}
 	}
+	
+	/*
+	public void updateGhostPiece(Piece p) {
+		ghostPiece = p;
+		addGhostPiece(ghostPiece)
+	}
+	*/
 }

@@ -27,4 +27,5 @@ public abstract class Block extends Rectangle {
 	public abstract void moveRightOne();
 	public abstract void moveLeftOne();
 	public abstract void moveBlock(int xChange, int yChange);
+	public abstract void setColor(Color c);
 }

@@ -15,7 +15,7 @@ public class Main extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	private JLabel statusbar;
-	private int width = 200, height = 400;
+	private int width = 200, height = 400 + 40; // offset for status bar
 
 	public Main() {
 		initUI();
@@ -23,7 +23,7 @@ public class Main extends JFrame {
 
 	private void initUI() {
 
-		statusbar = new JLabel("Press S to start, P to pause, r to restart.");
+		statusbar = new JLabel("Welcome to Tetris.");
 		add(statusbar, BorderLayout.SOUTH);
 		GameEngine board = new GameEngine(this);
 		add(board);

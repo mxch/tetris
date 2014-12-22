@@ -62,4 +62,10 @@ public class OPiece extends Piece {
 		return this;
 	}
 
+	@Override
+	public Piece getGhostPiece() {
+		Piece temp = new OPiece(this);
+		temp.setColor(Color.white);
+		return temp;
+	}
 }

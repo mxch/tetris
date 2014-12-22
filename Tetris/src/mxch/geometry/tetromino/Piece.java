@@ -85,6 +85,14 @@ public abstract class Piece {
 		}
 	}
 	
+	public void setColor(Color c) {
+		this.color = c;
+		for (FullBlock b : blocks) {
+			b.setColor(c);
+		}
+	}
+	
+	public abstract Piece getGhostPiece();
 	public abstract void rotateR();
 	public abstract void rotateL();
 	public abstract Piece getRotateR();
