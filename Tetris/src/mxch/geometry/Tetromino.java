@@ -7,7 +7,9 @@ import mxch.tetris.Tetris;
 
 public abstract class Tetromino {
 	public static enum Type {I,O,T,S,Z,J,L};
+	public static enum Orientation {UP, DOWN, LEFT, RIGHT};
 	private Type type;
+	private Orientation orient;
 	private Color color;
 	private ArrayList<Block> blocks;
 	private Tetris tetris;
@@ -16,11 +18,16 @@ public abstract class Tetromino {
 		this.type = type;
 		this.color = color;
 		this.tetris = tetris;
+		this.orient = Orientation.UP;
 		blocks = new ArrayList<Block>();
 	}
 	
 	public Type getType() {
 		return type;
+	}
+	
+	public Orientation getOrientation() {
+		return orient;
 	}
 	
 	public Color getColor() {
@@ -33,6 +40,10 @@ public abstract class Tetromino {
 	
 	public ArrayList<Block> getBlocks() {
 		return blocks;
+	}
+	
+	public void setOrientation(Orientation o) {
+		this.orient = o;
 	}
 	
 	public boolean onTop(ArrayList<Block> boardBlocks) {
@@ -80,7 +91,42 @@ public abstract class Tetromino {
 		}
 	}
 	
+	public boolean canMoveDownOne(ArrayList<Block> boardBlocks) {
+		for (Block b : blocks) {
+			if (!b.canMoveDownOne(boardBlocks)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean canMoveRightOne(ArrayList<Block> boardBlocks) {
+		for (Block b : blocks) {
+			if (!b.canMoveRightOne(boardBlocks)) {
+				System.out.println("Cannot move right.");
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean canMoveLeftOne(ArrayList<Block> boardBlocks) {
+		for (Block b : blocks) {
+			if (!b.canMoveLeftOne(boardBlocks)) {
+				System.out.println("Cannot move left.");
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public abstract void rotateR();
 	public abstract void rotateL();
+	public abstract boolean canRotateR(ArrayList<Block> boardBlocks);
+	public abstract boolean canRotateL(ArrayList<Block> boardBlocks);
+	
+	public String toString() {
+		return color.toString();
+	}
 	
 }

@@ -1,6 +1,7 @@
 package mxch.geometry;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import mxch.tetris.Tetris;
 
@@ -26,6 +27,18 @@ public class OPiece extends Tetromino {
 	public void rotateL() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public boolean canRotateR(ArrayList<Block> boardBlocks) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean canRotateL(ArrayList<Block> boardBlocks) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

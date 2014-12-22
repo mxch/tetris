@@ -15,11 +15,9 @@ public class Tetris extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	private JLabel statusbar;
-	private int width, height;
+	private int width = 200, height = 400;
 
 	public Tetris() {
-		width = 200;
-		height = 400;
 		initUI();
 	}
 

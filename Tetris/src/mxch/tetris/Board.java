@@ -32,6 +32,8 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 	private ArrayList<Block> blocks;
 	private Tetris tetris;
 	private Tetromino currPiece;
+	
+	private ArrayList<ArrayList<Block>> boardLayout;
 	//private final int boardWidth = 10, boardHeight = 20;
 
 	// boolean values
@@ -58,6 +60,9 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		// check if there are lines to clear.
+		
+		
 		// check if current piece is already in place
 		if (isPieceInPlace()) {
 			// check if the game is over.
@@ -71,7 +76,9 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 			System.out.println("Piece in Place, generating new Piece.");
 			// add the blocks of the current piece to the board
 			if (currPiece != null) {
-				blocks.addAll(currPiece.getBlocks());
+				blocks.addAll(0, currPiece.getBlocks()); // append to the front to paint first blocks last.
+				// add blocks to board layout
+				//for (Bloc)
 			}
 			// create new piece
 			currPiece = generateNewPiece();
@@ -79,7 +86,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		// else, move the current piece down one line
 		else {
 			/* Test */
-			System.out.println("Piece not in Place, moving Piece down.");
+			System.out.println("Piece not in Place, moving " + currPiece.toString() + " down.");
 			moveDownOne();
 		}
 
@@ -91,14 +98,23 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		System.out.println("Key Pressed.");
 		int keyCode = arg0.getKeyCode();
 		switch(keyCode) {
-		case KeyEvent.VK_UP: break;
-		case KeyEvent.VK_DOWN: break;
+		case KeyEvent.VK_UP: 
+			break;
+		case KeyEvent.VK_DOWN: 
+			break;
 		case KeyEvent.VK_LEFT: 
 			moveLeftOne();
 			System.out.println("Moving left.");
 			break;
 		case KeyEvent.VK_RIGHT: 
 			moveRightOne();
+			System.out.println("Moving Right.");
+			break;
+		case KeyEvent.VK_SPACE:
+			moveDownAll();
+			System.out.println("Dropping block.");
+			break;
+		case KeyEvent.VK_P:
 			break;
 		}
 		
@@ -121,25 +137,33 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
+
+		// paint all blocks.
+		for (Block b : blocks) {
+			paintBlock(g, b);
+		}
+		
 		if (currPiece != null) {
 			// paint current piece.
 			for (Block b : currPiece.getBlocks()) {
 				paintBlock(g, b);
 			}
 		}
-		// paint all blocks.
-		for (Block b : blocks) {
-			paintBlock(g, b);
-		}
 	}
 
 	private void paintBlock(Graphics g, Block b) {
-		g.setColor(b.getColor());
 		int x = (int) b.getX();
 		int y = (int) b.getY();
 		int w = (int) b.getWidth();
 		int h = (int) b.getHeight();
+		
+		// color the border
+		g.setColor(Color.BLACK);
 		g.fillRect(x,y,w,h);
+		
+		// color the block
+		g.setColor(b.getColor());
+		g.fillRect(x-2,y-2,w-2,h-2);
 	}
 
 	/**
@@ -158,7 +182,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		case 4: return new ZPiece(tetris);
 		case 5: return new JPiece(tetris);
 		case 6:	return new LPiece(tetris);
-		default: return null; // never happens.
+		default: return new IPiece(tetris); //return null; // never happens.
 		}
 	}
 
@@ -181,17 +205,29 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		return false;
 
 	}
+	
+	private void rotateRight() {
+		if (!isPieceInPlace() && currPiece.canRotateR(blocks)) currPiece.rotateR();
+	}
+	
+	private void rotateL() {
+		if (!isPieceInPlace() && currPiece.canRotateL(blocks)) currPiece.rotateL();
+	}
+	
+	private void moveDownAll() {
+		while(!isPieceInPlace() && currPiece.canMoveDownOne(blocks)) currPiece.moveDownOne();
+	}
 
 	private void moveDownOne() {
-		currPiece.moveDownOne();
+		if (!isPieceInPlace() && currPiece.canMoveDownOne(blocks)) currPiece.moveDownOne();
 	}
 	
 	private void moveLeftOne() {
-		currPiece.moveLeftOne();
+		if (!isPieceInPlace() && currPiece.canMoveLeftOne(blocks)) currPiece.moveLeftOne();
 	}
 	
 	private void moveRightOne() {
-		currPiece.moveRightOne();
+		if (!isPieceInPlace() && currPiece.canMoveRightOne(blocks)) currPiece.moveRightOne();
 	}
 	
 	private void exitGame() {
@@ -199,9 +235,11 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		System.exit(0);
 	}
 
+	/*
 	private boolean isEmpty() {
 		return blocks.size() == 0;
 	}
+	*/
 
 
 }
