@@ -35,7 +35,6 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 	private Board board;
 	private Timer timer = new Timer(400, this);
 
-	private ArrayList<ArrayList<FullBlock>> boardLayout;
 	//private final int boardWidth = 10, boardHeight = 20;
 
 	// boolean values
@@ -66,12 +65,14 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// check if there are lines to clear.
-
-
 		// check if current piece is already in place
 		if (board.isPieceInPlace(currPiece)) {
-			System.out.println("Piece in place.");
+			// check if there are lines to clear.
+			int numLines = board.clearLines();
+			if (numLines != 0) {
+				repaint();
+			}
+			//System.out.println("Piece in place.");
 			// check if the game is over.
 			if (isGameOver()) {
 				exitGame();
@@ -85,7 +86,7 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 		} 
 		// else, move the current piece down one line
 		else {
-			System.out.println("Moving piece down.");
+			//System.out.println("Moving piece down.");
 			board.move(currPiece, Movement.DOWN_ONE);
 		}
 
@@ -94,7 +95,7 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		System.out.println("Key Pressed.");
+		//System.out.println("Key Pressed.");
 		int keyCode = arg0.getKeyCode();
 		switch(keyCode) {
 		case KeyEvent.VK_UP: 
@@ -129,20 +130,20 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void paint(Graphics g) {
-		System.out.println("Painting board.");
+		//System.out.println("Painting board.");
 		super.paint(g);
 
 		// paint all blocks.
-		System.out.println("Getting blocks.");
+		//System.out.println("Getting blocks.");
 		ArrayList<FullBlock> blocks = board.getBlocks();
-		System.out.println("Num of blocks: " + blocks.size());
+		//System.out.println("Num of blocks: " + blocks.size());
 		for (FullBlock b : blocks) {
 			paintBlock(g, b);
 		}
 	}
 
 	private void paintBlock(Graphics g, FullBlock b) {
-		System.out.println("Painting block.");
+		//System.out.println("Painting block.");
 		int x = (int) b.getX();
 		int y = (int) b.getY();
 		int w = (int) b.getWidth();

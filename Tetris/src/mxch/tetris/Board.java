@@ -88,11 +88,11 @@ public class Board {
 	 * @param piece
 	 */
 	public void add(Piece piece) {
-		System.out.println("Adding Piece.");
+		//System.out.println("Adding Piece.");
 		for (Block b : piece.getBlocks()) {
 			int row = b.getIntY();
 			int col = b.getIntX();
-			System.out.println("Adding block at " + row + " " + col);
+			//System.out.println("Adding block at " + row + " " + col);
 			if (rowColIsValid(row, col)) rowLayout[row][col] = b;
 
 		}
@@ -262,5 +262,53 @@ public class Board {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Clears all rows containing all FullBlocks.
+	 * @return The number of rows cleared.
+	 */
+	public int clearLines() {
+		int numLines = 0;
+		for (int row = 0; row < height; row++) {
+			if (isLine(rowLayout[row])) {
+				/* TEST */
+				//System.out.println("Clearing row: " + row);
+				clearLine(rowLayout[row]);
+				compressLines(row);
+				numLines++;
+			}
+		}
+		return numLines;
+	}
+	
+	private boolean isLine(Block[] a) {
+		for(int i = 0; i < a.length; i++) {
+			if (a[i].getType() == BlockType.EMPTY) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private void clearLine(Block[] a) {
+		for(int i = 0; i < a.length; i++) {
+			a[i] = EmptyBlock.getInstance();
+		}
+	}
+	
+	private void compressLines(int deletedRow) {
+		for (int row = deletedRow-1; row >= 0; row--) {
+			for (int col = 0; col < width; col++) {
+				Block top = rowLayout[row][col];
+				if (top.getType() == BlockType.FULL) {
+					/*TEST*/
+					//System.out.println("Moving top to bottom");
+					top.moveDownOne();
+					rowLayout[row+1][col] = top;
+					rowLayout[row][col] = EmptyBlock.getInstance();
+				}
+			}
+		}
 	}
 }
