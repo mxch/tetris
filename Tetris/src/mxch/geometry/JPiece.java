@@ -10,11 +10,19 @@ public class JPiece extends Tetromino {
 
 	public JPiece(Tetris tetris) {
 		super(Type.J, color, tetris);
+		/*
 		// (3,0) (3,1) (4,1) (5,1)
 		super.addBlock(new Block(3, 0, tetris, color));
 		super.addBlock(new Block(3, 1, tetris, color));
 		super.addBlock(new Block(4, 1, tetris, color));
 		super.addBlock(new Block(5, 1, tetris, color));
+		*/
+		
+		// generate above
+		super.addBlock(new Block(3, -2, tetris, color));
+		super.addBlock(new Block(3, -1, tetris, color));
+		super.addBlock(new Block(4, -1, tetris, color));
+		super.addBlock(new Block(5, -1, tetris, color));
 	}
 
 	@Override

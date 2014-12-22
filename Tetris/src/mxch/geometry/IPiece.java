@@ -10,11 +10,19 @@ public class IPiece extends Tetromino {
 
 	public IPiece(Tetris tetris) {
 		super(Type.I, color, tetris);
+		/*
 		// (3,0) (4,0) (5,0) (6,0)
 		super.addBlock(new Block(3, 0, tetris, color));
 		super.addBlock(new Block(4, 0, tetris, color));
 		super.addBlock(new Block(5, 0, tetris, color));
 		super.addBlock(new Block(6, 0, tetris, color));
+		*/
+		
+		// generate above view?
+		super.addBlock(new Block(3, -1, tetris, color));
+		super.addBlock(new Block(4, -1, tetris, color));
+		super.addBlock(new Block(5, -1, tetris, color));
+		super.addBlock(new Block(6, -1, tetris, color));
 	}
 
 	@Override

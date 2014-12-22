@@ -10,11 +10,19 @@ public class LPiece extends Tetromino {
 
 	public LPiece(Tetris tetris) {
 		super(Type.L, color, tetris);
+		/*
 		// (3,1) (4,1) (5,1) (5,0)
 		super.addBlock(new Block(3, 1, tetris, color));
 		super.addBlock(new Block(4, 1, tetris, color));
 		super.addBlock(new Block(5, 1, tetris, color));
 		super.addBlock(new Block(5, 0, tetris, color));
+		*/
+		
+		// generate above
+		super.addBlock(new Block(3, -2, tetris, color));
+		super.addBlock(new Block(4, -2, tetris, color));
+		super.addBlock(new Block(5, -2, tetris, color));
+		super.addBlock(new Block(5, -1, tetris, color));
 	}
 
 	@Override

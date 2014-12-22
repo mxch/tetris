@@ -89,7 +89,7 @@ public class Block extends Rectangle {
 	}
 
 	public boolean onBoardBottom() {
-		if ((this.getY() + dy) == tetris.getHeight() - dy*2) {
+		if ((this.getY() + dy) == tetris.getHeight() - dy * 2) {
 			return true;
 		}
 		return false;

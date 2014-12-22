@@ -101,6 +101,8 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 		case KeyEvent.VK_UP: 
 			break;
 		case KeyEvent.VK_DOWN: 
+			moveDownOne();
+			System.out.println("Moving down.");
 			break;
 		case KeyEvent.VK_LEFT: 
 			moveLeftOne();
@@ -207,7 +209,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 	}
 	
 	private void rotateRight() {
-		if (!isPieceInPlace() && currPiece.canRotateR(blocks)) currPiece.rotateR();
+		if (currPiece.canRotateR(blocks)) currPiece.rotateR();
 	}
 	
 	private void rotateL() {
@@ -223,11 +225,11 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 	}
 	
 	private void moveLeftOne() {
-		if (!isPieceInPlace() && currPiece.canMoveLeftOne(blocks)) currPiece.moveLeftOne();
+		if (currPiece.canMoveLeftOne(blocks)) currPiece.moveLeftOne();
 	}
 	
 	private void moveRightOne() {
-		if (!isPieceInPlace() && currPiece.canMoveRightOne(blocks)) currPiece.moveRightOne();
+		if (currPiece.canMoveRightOne(blocks)) currPiece.moveRightOne();
 	}
 	
 	private void exitGame() {

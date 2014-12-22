@@ -10,11 +10,19 @@ public class TPiece extends Tetromino {
 
 	public TPiece(Tetris tetris) {
 		super(Type.T, color, tetris);
+		/*
 		// (4,0) (3,1) (4,1) (5,1)
 		super.addBlock(new Block(4, 0, tetris, color));
 		super.addBlock(new Block(3, 1, tetris, color));
 		super.addBlock(new Block(4, 1, tetris, color));
 		super.addBlock(new Block(5, 1, tetris, color));
+		*/
+		
+		// generate above 
+		super.addBlock(new Block(4, -1, tetris, color));
+		super.addBlock(new Block(3, -2, tetris, color));
+		super.addBlock(new Block(4, -2, tetris, color));
+		super.addBlock(new Block(5, -2, tetris, color));
 	}
 
 	@Override

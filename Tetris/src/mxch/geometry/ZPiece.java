@@ -10,11 +10,18 @@ public class ZPiece extends Tetromino {
 
 	public ZPiece(Tetris tetris) {
 		super(Type.Z, color, tetris);
+		/*
 		// (3,0) (4,0) (4,1) (5,1)
 		super.addBlock(new Block(3, 0, tetris, color));
 		super.addBlock(new Block(4, 0, tetris, color));
 		super.addBlock(new Block(4, 1, tetris, color));
 		super.addBlock(new Block(5, 1, tetris, color));
+		*/
+		
+		super.addBlock(new Block(3, -1, tetris, color));
+		super.addBlock(new Block(4, -1, tetris, color));
+		super.addBlock(new Block(4, -2, tetris, color));
+		super.addBlock(new Block(5, -2, tetris, color));
 	}
 
 	@Override
