@@ -21,4 +21,4 @@ IMPLEMENTATION:
 
 NOTES:
 - Core game is complete, rotations and movement all work.
-- Just need to implement speedup, pause, restart and play again.
+- Ghost may still have some issues, can toggle the ghost option in GameEngine.
