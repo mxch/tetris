@@ -50,9 +50,9 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 
 	private boolean gamePaused = true;
 	private boolean gameOver = false;
-	
+
 	// OPTIONS
-	private boolean useGhost = false;
+	private boolean useGhost = true;
 
 
 	public GameEngine(Main tetris) {
@@ -112,11 +112,14 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 			}
 			// check if the game is over.
 			if (isGameOver()) {
+				/*TEST*/
+				System.out.println("GAME IS OVER.");
 				gameOver();
+			} else {
+				currPiece = Piece.getRandomPiece(); // create new current piece
+				board.addPiece(currPiece); // add new current piece to board
+				displayGhostPiece();
 			}
-			currPiece = Piece.getRandomPiece(); // create new current piece
-			board.addPiece(currPiece); // add new current piece to board
-			displayGhostPiece();
 
 		} 
 		// else, move the current piece down one line
@@ -255,7 +258,7 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 			score += 1200*(level+1);
 			break;
 		}
-		tetris.getStatusBar().setText("Score: " + score);
+		tetris.getStatusBar().setText("Level: " + (level+1) + " Score: " + score);
 		repaint();
 	}
 
@@ -267,6 +270,11 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 			board.updateGhostPiece(currPiece, ghostPiece);
 			/*TEST*/
 			System.out.println("Ghostpiece got.");
+
+			// dirty way to clear ghost blocks
+			if (board.isPieceInPlace(currPiece)) {
+				board.clearGhostBlocks();
+			}
 		}
 	}
 
@@ -275,7 +283,7 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 	}
 
 	private void gameOver() {
-		tetris.getStatusBar().setText("GAME OVER. Lines Cleared: " + 
+		tetris.getStatusBar().setText("GAME OVER - Lines: " + 
 				linesCleared +" Score: " + score);
 		gameOver = true;
 		pause();

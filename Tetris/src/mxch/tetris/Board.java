@@ -23,6 +23,8 @@ public class Board {
 	private static int width = 10, height = 20;
 	private static int dx = pxWidth/width, dy = pxHeight/height;
 	private Block[][] rowLayout;
+	private Piece prevCurrPiece;
+	private Piece prevGhostPiece;
 	private Piece currPiece;
 	private Piece ghostPiece;
 
@@ -264,13 +266,18 @@ public class Board {
 	private boolean isBlockValid(Piece p, Block b) {
 		int row = b.getIntY();
 		int col = b.getIntX();
-		if (row < 0) {
+
+		if (p.getColor() == Color.WHITE) {
 			return true;
-		}
-		else if (rowColIsValid(row,col) &&
-				rowLayout[row][col].getColor() != Color.WHITE && // check for ghost block
-				rowLayout[row][col].getType() == BlockType.EMPTY) {
-			return true;
+		} else {
+			if (row < 0) {
+				return true;
+			}
+			else if (rowColIsValid(row,col) &&
+					(rowLayout[row][col].getColor() == Color.WHITE || // check for ghost block
+					rowLayout[row][col].getType() == BlockType.EMPTY)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -405,11 +412,12 @@ public class Board {
 		if (currPiece != null) {
 			//removePiece(currPiece);
 		}
+
 		ghostPiece = ghost;
 		currPiece = curr;
 		dropGhostPiece();
 		addPiece(ghostPiece);
-		//addPiece(currPiece);
+		addPiece(currPiece);
 	}
 
 	private void dropGhostPiece() {
@@ -441,6 +449,19 @@ public class Board {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * quick and dirty fix for remaining ghost blocks.
+	 */
+	public void clearGhostBlocks() {
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				if (rowLayout[row][col].getColor() == Color.WHITE) {
+					rowLayout[row][col] = EmptyBlock.getInstance();
+				}
+			}
+		}
 	}
 
 
