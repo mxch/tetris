@@ -50,6 +50,9 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 
 	private boolean gamePaused = true;
 	private boolean gameOver = false;
+	
+	// OPTIONS
+	private boolean useGhost = false;
 
 
 	public GameEngine(Main tetris) {
@@ -82,6 +85,7 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 
 	private void resume() {
 		gamePaused = false;
+		displayGhostPiece();
 		timer.start();
 	}
 
@@ -112,11 +116,12 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 			}
 			currPiece = Piece.getRandomPiece(); // create new current piece
 			board.addPiece(currPiece); // add new current piece to board
+			displayGhostPiece();
 
 		} 
 		// else, move the current piece down one line
 		else {
-			//displayGhostPiece();
+			displayGhostPiece();
 			board.move(currPiece, Movement.DOWN_ONE);
 		}
 
@@ -125,31 +130,38 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
+		/*TEST*/
+		System.out.println("Key Pressed");
 		int keyCode = arg0.getKeyCode();
 		switch(keyCode) {
 		case KeyEvent.VK_UP:
 			if (!gamePaused && !gameOver) {
 				board.move(currPiece, Movement.ROTATE_R);
+				displayGhostPiece();
 			}
 			break;
 		case KeyEvent.VK_SHIFT:
 			if (!gamePaused && !gameOver) {
 				board.move(currPiece, Movement.ROTATE_L);
+				displayGhostPiece();
 			}
 			break;
 		case KeyEvent.VK_DOWN: 
 			if (!gamePaused && !gameOver) {
 				board.move(currPiece, Movement.DOWN_ONE);
+				displayGhostPiece();
 			}
 			break;
 		case KeyEvent.VK_LEFT: 
 			if (!gamePaused && !gameOver) {
 				board.move(currPiece, Movement.LEFT_ONE);
+				displayGhostPiece();
 			}
 			break;
 		case KeyEvent.VK_RIGHT: 
 			if (!gamePaused && !gameOver) {
 				board.move(currPiece, Movement.RIGHT_ONE);
+				displayGhostPiece();
 			}
 			break;
 		case KeyEvent.VK_SPACE:
@@ -191,7 +203,10 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 		 */
 
 		// paint all blocks.
+
 		ArrayList<FullBlock> blocks = board.getBlocks();
+		/*TEST*/
+		System.out.println("Painting Board. Blocks: " + blocks.size());
 		for (FullBlock b : blocks) {
 			paintBlock(g, b);
 		}
@@ -243,13 +258,17 @@ public class GameEngine extends JPanel implements ActionListener, KeyListener {
 		tetris.getStatusBar().setText("Score: " + score);
 		repaint();
 	}
-	
-	/*
+
 	private void displayGhostPiece() {
-		ghostPiece = currPiece.getGhostPiece();
-		board.updateGhostPiece(ghostPiece);
+		if (useGhost) {
+			/*TEST*/
+			System.out.println("Getting ghostpiece.");
+			ghostPiece = currPiece.getGhostPiece();
+			board.updateGhostPiece(currPiece, ghostPiece);
+			/*TEST*/
+			System.out.println("Ghostpiece got.");
+		}
 	}
-	*/
 
 	private boolean isGameOver() {
 		return board.isPieceInPlace(currPiece) && board.isPieceOnTopEdge(currPiece);

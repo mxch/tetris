@@ -23,6 +23,7 @@ public class Board {
 	private static int width = 10, height = 20;
 	private static int dx = pxWidth/width, dy = pxHeight/height;
 	private Block[][] rowLayout;
+	private Piece currPiece;
 	private Piece ghostPiece;
 
 	public Board() {
@@ -114,14 +115,14 @@ public class Board {
 			if (rowColIsValid(row, col)) rowLayout[row][col] = EmptyBlock.getInstance();
 		}
 	}
-	
+
 	public void addBlock(Block b) {
 		int row = b.getIntY();
 		int col = b.getIntX();
 		//System.out.println("Adding block at " + row + " " + col);
 		if (rowColIsValid(row, col)) rowLayout[row][col] = b;
 	}
-	
+
 	public void removeBlock(Block b) {
 		int row = b.getIntY();
 		int col = b.getIntX();
@@ -203,7 +204,8 @@ public class Board {
 
 		if (rowColIsValid(row, col)) {
 			Block o = rowLayout[row][col];
-			if (!piece.getBlocks().contains(o)) {
+			if (!piece.getBlocks().contains(o) && 
+					o.getColor() != Color.WHITE) { // check for ghost block.
 				return o.getType() == BlockType.FULL;
 			}
 		}
@@ -249,7 +251,7 @@ public class Board {
 		return false;
 	}
 
-	
+
 	public boolean isPieceOnTopEdge(Piece piece) {
 		for (Block b : piece.getBlocks()) {
 			if (blockOnEdge(b, Movement.UP_ONE)) {
@@ -258,7 +260,7 @@ public class Board {
 		}
 		return false;
 	}
-	
+
 	private boolean isBlockValid(Piece p, Block b) {
 		int row = b.getIntY();
 		int col = b.getIntX();
@@ -266,12 +268,13 @@ public class Board {
 			return true;
 		}
 		else if (rowColIsValid(row,col) &&
+				rowLayout[row][col].getColor() != Color.WHITE && // check for ghost block
 				rowLayout[row][col].getType() == BlockType.EMPTY) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	private boolean isPieceValid(Piece piece) {
 		for (Block b : piece.getBlocks()) {
 			if(!isBlockValid(piece, b)) {
@@ -333,7 +336,6 @@ public class Board {
 	 * @return
 	 */
 	public boolean canMoveOne(Piece piece, Movement m) {
-			
 		for (FullBlock b : piece.getBlocks()) {
 			// check if block is on bottom or on another block
 			if (blockOnEdge(b, m) || blockOnBlock(piece, b, m)) {
@@ -342,7 +344,7 @@ public class Board {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Clears all rows containing all FullBlocks.
 	 * @return The number of rows cleared.
@@ -360,7 +362,7 @@ public class Board {
 		}
 		return numLines;
 	}
-	
+
 	private boolean isLine(Block[] a) {
 		for(int i = 0; i < a.length; i++) {
 			if (a[i].getType() == BlockType.EMPTY) {
@@ -369,13 +371,13 @@ public class Board {
 		}
 		return true;
 	}
-	
+
 	private void clearLine(Block[] a) {
 		for(int i = 0; i < a.length; i++) {
 			a[i] = EmptyBlock.getInstance();
 		}
 	}
-	
+
 	private void compressLines(int deletedRow) {
 		for (int row = deletedRow-1; row >= 0; row--) {
 			for (int col = 0; col < width; col++) {
@@ -390,11 +392,56 @@ public class Board {
 			}
 		}
 	}
-	
-	/*
-	public void updateGhostPiece(Piece p) {
-		ghostPiece = p;
-		addGhostPiece(ghostPiece)
+
+	// GHOST PIECE STUFF
+
+	public void updateGhostPiece(Piece curr, Piece ghost) {
+		if (ghostPiece != null && !isPieceInPlace(currPiece)) {
+			// had to check if the currPiece (previous curr piece)
+			// was in place. since the ghost and curr share the same location
+			// if curr is in place, removing ghost would remove the curr piece.
+			removePiece(ghostPiece);
+		}
+		if (currPiece != null) {
+			//removePiece(currPiece);
+		}
+		ghostPiece = ghost;
+		currPiece = curr;
+		dropGhostPiece();
+		addPiece(ghostPiece);
+		//addPiece(currPiece);
 	}
-	*/
+
+	private void dropGhostPiece() {
+		while(canDropGhostPiece()) {
+			/*TEST*/
+			//System.out.println("Dropping ghostpiece down.");
+			ghostPiece.moveOne(Movement.DOWN_ONE);
+		}
+	}
+
+	private boolean canDropGhostPiece() {
+		for (Block b : ghostPiece.getBlocks()) {
+			if (blockOnEdge(b, Movement.DOWN_ONE) || ghostBlockOnBlock(b)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean ghostBlockOnBlock(Block b) {
+		int row = b.getIntY() + 1;
+		int col = b.getIntX();
+
+		if (rowColIsValid(row, col)) {
+			Block o = rowLayout[row][col];
+			if (!currPiece.getBlocks().contains(o) && 
+					!ghostPiece.getBlocks().contains(o)) { // check for ghost block.
+				return o.getType() == BlockType.FULL;
+			}
+		}
+		return false;
+	}
+
+
 }

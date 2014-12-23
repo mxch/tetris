@@ -18,8 +18,7 @@ public class EmptyBlock extends Block {
 
 	@Override
 	public Color getColor() {
-		// TODO Auto-generated method stub
-		return null;
+		return Color.GRAY;
 	}
 
 	@Override
