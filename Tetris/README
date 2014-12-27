@@ -13,7 +13,7 @@ CONTROLS:
 IMPLEMENTATION:
 - Tetrominos are I, J, L, O, P, S, T pieces.
 - Each piece is composed of blocks and contains a list of blocks.
-- The rotation system is depended on the specific ordering of blocks.
+- The rotation system is dependent on the specific ordering of blocks for each piece.
 - Information on block orderings are contained in piece class description.
 - Rotations based on the SRS system: http://tetris.wikia.com/wiki/Category:Rotation_Systems
 - Scoring is based on the original Nintendo scoring system: http://tetris.wikia.com/wiki/Scoring

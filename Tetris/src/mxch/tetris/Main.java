@@ -52,6 +52,7 @@ public class Main extends JFrame {
 			@Override
 			public void run() {
 				Main game = new Main();
+				game.setUndecorated(true);
 				game.setVisible(true);
 			}
 		});
